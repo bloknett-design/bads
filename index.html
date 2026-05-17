@@ -2,1390 +2,898 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#4CAF50" id="themeColor">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#f7f5f2">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>График БАД</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f7f5f2;
-            --card: #ffffff;
-            --text: #1e1e1e;
-            --text-secondary: #5c5c5c;
-            --text-tertiary: #8a8a8a;
-            --accent: #4a8c6f;
-            --accent-light: #e8f4ed;
-            --accent-dark: #356b52;
-            --morning: #e8913a;
-            --morning-bg: #fef7f1;
-            --day: #c8882a;
-            --day-bg: #fefaf4;
-            --evening: #5b6e8a;
-            --evening-bg: #f4f6f9;
-            --border: #e8e5e0;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
-            --radius-sm: 10px;
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --primary-light: #E8F5E9;
+            --secondary: #FF9800;
+            --bg: #FAFAFA;
+            --surface: #FFFFFF;
+            --text: #212121;
+            --text-secondary: #757575;
+            --border: #E0E0E0;
+            --error: #F44336;
+            --error-bg: #FFEBEE;
+            --success: #4CAF50;
+            --info: #2196F3;
+            --warning: #FF9800;
+            --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --shadow-lg: 0 4px 12px rgba(0,0,0,0.15);
             --radius: 16px;
-            --radius-lg: 20px;
-            --radius-xl: 24px;
-            --font-xs: 0.72rem;
-            --font-sm: 0.82rem;
-            --font-base: 0.94rem;
-            --font-md: 1.05rem;
-            --font-lg: 1.25rem;
-            --font-xl: 1.5rem;
-            --font-xxl: 1.9rem;
-            --safe-bottom: env(safe-area-inset-bottom, 16px);
-            --nav-height: 68px;
+            --radius-sm: 12px;
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        [data-theme="dark"] {
+            --primary: #66BB6A;
+            --primary-dark: #4CAF50;
+            --primary-light: #1B3A1B;
+            --secondary: #FFB74D;
+            --bg: #121212;
+            --surface: #1E1E1E;
+            --text: #E0E0E0;
+            --text-secondary: #9E9E9E;
+            --border: #333333;
+            --error: #EF5350;
+            --error-bg: #3A1C1C;
+            --success: #66BB6A;
+            --info: #42A5F5;
+            --warning: #FFB74D;
+            --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.5);
+            --shadow-lg: 0 4px 12px rgba(0,0,0,0.5);
         }
-        html {
-            font-size: 16px;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-font-smoothing: antialiased;
-            scroll-behavior: smooth;
-        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
             color: var(--text);
-            min-height: 100vh;
-            min-height: 100dvh;
-            display: flex;
-            justify-content: center;
             line-height: 1.5;
-            user-select: none;
-            -webkit-user-select: none;
-            padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 8px);
-        }
-        .app-container {
-            width: 100%;
-            max-width: 480px;
-            position: relative;
             overflow-x: hidden;
+            padding-bottom: calc(72px + var(--safe-bottom));
+            transition: background 0.3s, color 0.3s;
         }
 
         /* Header */
         .header {
             position: sticky;
             top: 0;
-            z-index: 50;
-            background: var(--bg);
-            padding: 14px 16px 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
+            z-index: 100;
+            background: var(--surface);
+            padding: 16px 16px 12px;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            transition: background 0.3s, border-color 0.3s;
         }
-        .header-date {
-            font-size: var(--font-sm);
-            color: var(--text-secondary);
-            font-weight: 500;
-            letter-spacing: -0.01em;
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .header-title {
-            font-size: var(--font-xl);
+            font-size: 24px;
             font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--text);
+            color: var(--primary-dark);
         }
-        .month-nav {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--card);
-            border-radius: 30px;
-            padding: 6px 6px 6px 16px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-        }
-        .month-nav .month-name {
-            font-weight: 600;
-            font-size: var(--font-base);
-            color: var(--text);
-            min-width: 90px;
-            text-align: center;
-            letter-spacing: -0.01em;
-        }
-        .month-nav button {
-            width: 36px;
-            height: 36px;
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            border: none;
+            border: 1px solid var(--border);
             background: var(--bg);
             color: var(--text);
-            font-size: 1.1rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 20px;
             transition: all 0.2s;
+        }
+        .theme-toggle:active { transform: scale(0.9); }
+        .header-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* Search */
+        .search-bar {
+            padding: 0 16px 12px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 70px;
+            z-index: 99;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-family: inherit;
+            background: var(--bg);
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s, background 0.3s, color 0.3s;
+        }
+        .search-input:focus { border-color: var(--primary); }
+        .search-input::placeholder { color: var(--text-secondary); }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 130px;
+            z-index: 98;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .filters::-webkit-scrollbar { display: none; }
+        .filter-chip {
             flex-shrink: 0;
-        }
-        .month-nav button:active {
-            background: var(--accent-light);
-            color: var(--accent);
-            transform: scale(0.94);
-        }
-        .month-nav .btn-today {
-            width: auto;
+            padding: 8px 16px;
             border-radius: 20px;
-            padding: 0 14px;
-            font-size: var(--font-xs);
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            background: var(--accent);
-            color: #fff;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
             white-space: nowrap;
         }
-        .month-nav .btn-today:active {
-            background: var(--accent-dark);
-            color: #fff;
-            transform: scale(0.95);
+        .filter-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
 
-        /* Main content */
-        .main-content {
-            padding: 0 14px 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+        /* Sections */
+        .section { display: none; padding: 16px; }
+        .section.active { display: block; }
 
-        /* Section title */
-        .section-title {
-            font-size: var(--font-xs);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--text-tertiary);
-            padding: 12px 6px 4px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .section-title .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-            flex-shrink: 0;
-        }
-        .dot-morning {
-            background: var(--morning);
-        }
-        .dot-day {
-            background: var(--day);
-        }
-        .dot-evening {
-            background: var(--evening);
-        }
-
-        /* Supplement card */
-        .supplement-card {
-            background: var(--card);
+        /* Cards */
+        .card {
+            background: var(--surface);
             border-radius: var(--radius);
-            padding: 14px 16px;
-            box-shadow: var(--shadow-sm);
-            border: 1.5px solid transparent;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: transform 0.15s, box-shadow 0.15s, background 0.3s;
+            border: 1px solid transparent;
+        }
+        .card:active { transform: scale(0.98); }
+        .card.today-active {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, var(--surface) 0%, var(--primary-light) 100%);
+        }
+        .card-header {
             display: flex;
-            align-items: center;
-            gap: 12px;
-            position: relative;
-            -webkit-tap-highlight-color: transparent;
-            animation: fadeInUp 0.35s ease forwards;
-            opacity: 0;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
         }
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .supplement-card:active {
-            transform: scale(0.985);
-            box-shadow: var(--shadow-md);
-            border-color: var(--border);
-        }
-        .supplement-card.checked {
-            border-color: #c8e6d4;
-            background: #fafff9;
-        }
-        .supplement-card.checked .check-circle {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #fff;
-        }
-        .check-circle {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 2px solid #d5d2cc;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            transition: all 0.25s;
-            color: transparent;
-            background: #fff;
-        }
-        .card-info {
-            flex: 1;
-            min-width: 0;
-        }
-        .card-name {
-            font-weight: 650;
-            font-size: var(--font-base);
-            letter-spacing: -0.01em;
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
             color: var(--text);
-            margin-bottom: 2px;
+        }
+        .card-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .badge-permanent { background: var(--primary-light); color: var(--primary-dark); }
+        .badge-seasonal { background: #FFF3E0; color: #E65100; }
+        .badge-course { background: #E3F2FD; color: #1565C0; }
+        [data-theme="dark"] .badge-seasonal { background: #3E2723; color: #FFB74D; }
+        [data-theme="dark"] .badge-course { background: #0D2B3E; color: #42A5F5; }
+        .card-dosage {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
         }
         .card-meta {
             display: flex;
-            flex-wrap: wrap;
+            align-items: center;
             gap: 6px;
-            align-items: center;
-        }
-        .card-tag {
-            font-size: var(--font-xs);
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-weight: 500;
-            letter-spacing: 0.01em;
-            white-space: nowrap;
-        }
-        .tag-morning {
-            background: var(--morning-bg);
-            color: var(--morning);
-        }
-        .tag-day {
-            background: var(--day-bg);
-            color: var(--day);
-        }
-        .tag-evening {
-            background: var(--evening-bg);
-            color: var(--evening);
-        }
-        .card-dosage {
-            font-size: var(--font-xs);
-            color: var(--text-tertiary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 140px;
-        }
-        .card-chevron {
-            color: #c5c2bb;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-            transition: transform 0.3s;
-        }
-        .supplement-card.expanded .card-chevron {
-            transform: rotate(180deg);
-            color: var(--accent);
-        }
-        .card-details {
-            display: none;
-            padding: 6px 0 0 0;
-            border-top: 1px solid var(--border);
-            margin-top: 8px;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        .supplement-card.expanded .card-details {
-            display: block;
-        }
-        .supplement-card.expanded {
-            flex-wrap: wrap;
-            padding-bottom: 10px;
-        }
-        .supplement-card.expanded .card-info {
-            flex: 1 1 60%;
-        }
-        .supplement-card.expanded .card-details {
-            flex: 1 1 100%;
-        }
-        .detail-row {
-            margin-bottom: 6px;
-            font-size: var(--font-sm);
-            line-height: 1.45;
-        }
-        .detail-label {
-            font-weight: 600;
+            font-size: 13px;
             color: var(--text-secondary);
-            font-size: var(--font-xs);
-            letter-spacing: 0.03em;
-            text-transform: uppercase;
-            margin-bottom: 1px;
+            margin-bottom: 10px;
         }
-        .detail-value {
-            color: var(--text);
-            font-size: var(--font-sm);
-        }
-        .detail-warning {
-            background: #fff8f5;
-            border-radius: 8px;
-            padding: 8px 10px;
-            color: #b85a30;
-            font-size: var(--font-xs);
-            margin-top: 4px;
-            line-height: 1.4;
-        }
-        .detail-tip {
-            background: #f5faf7;
-            border-radius: 8px;
-            padding: 8px 10px;
-            color: #3d6b52;
-            font-size: var(--font-xs);
-            margin-top: 4px;
-            line-height: 1.4;
-        }
-
-        /* Daily progress */
-        .daily-progress {
-            background: var(--card);
-            border-radius: var(--radius-lg);
-            padding: 14px 18px;
-            margin: 0 14px 6px;
-            box-shadow: var(--shadow-sm);
+        .card-meta svg { width: 16px; height: 16px; flex-shrink: 0; }
+        .card-months {
             display: flex;
-            align-items: center;
-            gap: 14px;
-            border: 1.5px solid var(--border);
+            gap: 4px;
+            flex-wrap: wrap;
         }
-        .progress-ring {
-            position: relative;
-            width: 52px;
-            height: 52px;
-            flex-shrink: 0;
-        }
-        .progress-ring svg {
-            transform: rotate(-90deg);
-            width: 52px;
-            height: 52px;
-        }
-        .progress-ring .bg-circle {
-            fill: none;
-            stroke: #e8e5e0;
-            stroke-width: 5;
-        }
-        .progress-ring .fg-circle {
-            fill: none;
-            stroke: var(--accent);
-            stroke-width: 5;
-            stroke-linecap: round;
-            transition: stroke-dashoffset 0.5s ease;
-        }
-        .progress-text {
-            position: absolute;
-            inset: 0;
+        .month-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: var(--font-sm);
-            color: var(--text);
-        }
-        .progress-info .progress-title {
+            font-size: 10px;
             font-weight: 600;
-            font-size: var(--font-base);
+            background: var(--bg);
+            color: var(--text-secondary);
+            transition: background 0.3s, color 0.3s;
         }
-        .progress-info .progress-sub {
-            font-size: var(--font-xs);
-            color: var(--text-tertiary);
+        .month-dot.active {
+            background: var(--primary);
+            color: white;
         }
+        .month-dot.current {
+            box-shadow: 0 0 0 2px var(--secondary);
+        }
+
+        /* Today section */
+        .today-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 24px 16px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .today-hero h2 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+        .today-hero p { font-size: 14px; opacity: 0.9; }
+        .today-count {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+        .today-list { margin-top: 8px; }
 
         /* Empty state */
-        .empty-state {
+        .empty {
             text-align: center;
-            padding: 40px 20px;
-            color: var(--text-tertiary);
+            padding: 48px 16px;
+            color: var(--text-secondary);
         }
-        .empty-state .icon {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
-        .empty-state p {
-            font-size: var(--font-sm);
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
         }
 
-        /* Bottom nav */
+        /* Bottom Nav */
         .bottom-nav {
             position: fixed;
             bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 480px;
-            background: #fafaf8;
+            left: 0;
+            right: 0;
+            background: var(--surface);
             border-top: 1px solid var(--border);
             display: flex;
-            align-items: center;
             justify-content: space-around;
-            padding: 6px 8px var(--safe-bottom);
-            z-index: 100;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            height: var(--nav-height);
+            padding-bottom: var(--safe-bottom);
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            transition: background 0.3s, border-color 0.3s;
         }
         .nav-item {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2px;
-            padding: 6px 14px;
-            border-radius: 20px;
+            padding: 8px 0 12px;
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: var(--font-xs);
-            font-weight: 500;
-            color: var(--text-tertiary);
-            letter-spacing: 0.01em;
-            background: transparent;
             border: none;
-            min-width: 60px;
-        }
-        .nav-item.active {
-            color: var(--accent);
-            font-weight: 700;
-            background: var(--accent-light);
-        }
-        .nav-item .nav-icon {
-            font-size: 1.3rem;
-            transition: transform 0.2s;
-        }
-        .nav-item:active .nav-icon {
-            transform: scale(0.85);
-        }
-
-        /* Year grid */
-        .year-grid-container {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            margin: 0 4px;
-            padding-bottom: 8px;
-            scroll-snap-type: x proximity;
-        }
-        .year-grid {
-            display: grid;
-            grid-template-columns: 130px repeat(12, 44px);
-            gap: 1px;
-            font-size: var(--font-xs);
-            min-width: fit-content;
-            background: var(--border);
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-        }
-        .year-grid .yg-cell {
-            background: var(--card);
-            padding: 7px 4px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 36px;
-            font-weight: 500;
-        }
-        .year-grid .yg-header {
-            font-weight: 700;
-            font-size: 0.7rem;
-            letter-spacing: 0.03em;
+            background: none;
+            font-family: inherit;
             color: var(--text-secondary);
-            background: #fafaf7;
-            position: sticky;
-            top: 0;
+            transition: color 0.2s;
         }
-        .year-grid .yg-name {
-            justify-content: flex-start;
-            padding-left: 10px;
-            font-weight: 600;
-            font-size: var(--font-xs);
-            letter-spacing: -0.01em;
-            position: sticky;
-            left: 0;
-            z-index: 2;
-            background: #fdfdfb;
-        }
-        .yg-active {
-            color: var(--accent);
-            font-weight: 700;
-            font-size: 1rem;
-        }
-        .yg-inactive {
-            color: #d5d2cc;
-            font-size: 0.6rem;
-        }
-        .yg-highlight-col {
-            background: #fafff8 !important;
-        }
+        .nav-item.active { color: var(--primary); }
+        .nav-item svg { width: 24px; height: 24px; margin-bottom: 2px; }
+        .nav-item span { font-size: 11px; font-weight: 500; }
 
-        /* Modal overlay */
+        /* Modal */
         .modal-overlay {
+            display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 200;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            animation: fadeIn 0.25s ease;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
+        .modal-overlay.show { display: flex; opacity: 1; }
         .modal-sheet {
-            background: #fff;
-            width: 100%;
-            max-width: 480px;
-            border-radius: 20px 20px 0 0;
-            max-height: 80vh;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            border-radius: var(--radius) var(--radius) 0 0;
+            max-height: 90vh;
             overflow-y: auto;
-            padding: 20px 16px 30px;
-            animation: slideUp 0.3s ease;
-            box-shadow: var(--shadow-lg);
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+            padding-bottom: calc(24px + var(--safe-bottom));
         }
-        @keyframes slideUp {
-            from {
-                transform: translateY(100%);
-            }
-            to {
-                transform: translateY(0);
-            }
-        }
+        .modal-overlay.show .modal-sheet { transform: translateY(0); }
         .modal-handle {
             width: 40px;
             height: 4px;
-            background: #d5d2cc;
+            background: var(--border);
             border-radius: 2px;
-            margin: 0 auto 14px;
+            margin: 12px auto;
+            transition: background 0.3s;
         }
-        .modal-title {
-            font-size: var(--font-lg);
-            font-weight: 700;
-            margin-bottom: 6px;
-            letter-spacing: -0.02em;
+        .modal-content { padding: 0 20px 20px; }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
         }
+        .modal-title { font-size: 22px; font-weight: 700; color: var(--text); }
         .modal-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            width: 36px;
-            height: 36px;
+            width: 36px; height: 36px;
             border-radius: 50%;
-            background: #f0ede8;
             border: none;
-            font-size: 1.2rem;
+            background: var(--bg);
+            color: var(--text);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 5;
+            font-size: 20px;
+            transition: background 0.3s, color 0.3s;
         }
 
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2d2d2d;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 24px;
-            font-size: var(--font-sm);
+        /* Info blocks */
+        .info-block {
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            margin-bottom: 12px;
+            transition: background 0.3s;
+        }
+        .info-block-label {
+            font-size: 12px;
             font-weight: 600;
-            z-index: 300;
-            animation: toastIn 0.35s ease;
-            pointer-events: none;
-            letter-spacing: 0.01em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--primary);
+            margin-bottom: 6px;
         }
-        @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
+        .info-block-text { font-size: 15px; line-height: 1.5; color: var(--text); }
+        .info-block.warning { background: var(--error-bg); }
+        .info-block.warning .info-block-label { color: var(--error); }
+        .info-block.success { background: var(--primary-light); }
+        .info-block.success .info-block-label { color: var(--primary-dark); }
 
-        /* Reset daily button */
-        .reset-btn {
-            background: none;
-            border: 1px solid var(--border);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: var(--font-xs);
-            cursor: pointer;
-            color: var(--text-tertiary);
-            font-weight: 500;
-            transition: all 0.2s;
+        /* Time chips */
+        .time-chips {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
         }
-        .reset-btn:active {
-            background: #f5f0eb;
+        .time-chip {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .chip-morning { background: #FFF9C4; color: #F57F17; }
+        .chip-day { background: #E3F2FD; color: #1565C0; }
+        .chip-evening { background: #F3E5F5; color: #6A1B9A; }
+        [data-theme="dark"] .chip-morning { background: #3E3A1C; color: #FFD54F; }
+        [data-theme="dark"] .chip-day { background: #0D2B3E; color: #90CAF9; }
+        [data-theme="dark"] .chip-evening { background: #2E1534; color: #CE93D8; }
+
+        /* Schedule grid in modal */
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .schedule-cell {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+            transition: background 0.3s, color 0.3s;
+        }
+        .schedule-cell.active {
+            background: var(--primary);
+            color: white;
+        }
+        .schedule-cell.current {
+            box-shadow: 0 0 0 2px var(--secondary);
+        }
+        .schedule-cell span { font-size: 10px; font-weight: 400; opacity: 0.8; }
+
+        /* Compatibility matrix */
+        .compat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .compat-card {
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            border: 1px solid var(--border);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .compat-card h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
             color: var(--text);
         }
+        .compat-card ul {
+            list-style: none;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .compat-card ul li {
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .compat-card ul li:last-child { border: none; }
+        .compat-good { color: var(--success); }
+        .compat-bad { color: var(--error); }
 
-        @media (max-width: 380px) {
-            .card-dosage {
-                max-width: 100px;
-            }
-            .month-nav .month-name {
-                min-width: 70px;
-                font-size: var(--font-sm);
-            }
-            .year-grid {
-                grid-template-columns: 110px repeat(12, 38px);
-            }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 0; height: 0; }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card { animation: fadeIn 0.3s ease-out; }
+
+        /* Check button */
+        .check-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: var(--primary);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s, opacity 0.2s;
+        }
+        .check-btn:active { background: var(--primary-dark); }
+        .check-btn.checked {
+            background: var(--text-secondary);
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
-    <div class="app-container" id="app">
-        <!-- Header -->
-        <header class="header">
-            <div>
-                <div class="header-date" id="headerDate"></div>
-                <div class="header-title">График БАД</div>
-            </div>
-            <div class="month-nav">
-                <button aria-label="Предыдущий месяц" id="btnPrev">◀</button>
-                <span class="month-name" id="monthName"></span>
-                <button class="btn-today" id="btnToday">Сегодня</button>
-                <button aria-label="Следующий месяц" id="btnNext">▶</button>
-            </div>
-        </header>
 
-        <!-- Daily progress -->
-        <div class="daily-progress" id="dailyProgress">
-            <div class="progress-ring">
-                <svg viewBox="0 0 52 52">
-                    <circle class="bg-circle" cx="26" cy="26" r="22"/>
-                    <circle class="fg-circle" id="progressCircle" cx="26" cy="26" r="22"
-                    stroke-dasharray="138.23" stroke-dashoffset="138.23"/>
-                </svg>
-                <div class="progress-text" id="progressText">0/0</div>
-            </div>
-            <div class="progress-info">
-                <div class="progress-title" id="progressTitle">Приём на сегодня</div>
-                <div class="progress-sub" id="progressSub"></div>
-            </div>
-            <button class="reset-btn" id="btnReset" style="margin-left:auto;">Сброс</button>
-        </div>
-
-        <!-- Main content area -->
-        <div class="main-content" id="mainContent"></div>
-
-        <!-- Bottom navigation -->
-        <nav class="bottom-nav">
-            <button class="nav-item active" data-tab="today">
-                <span class="nav-icon">☀️</span> Сегодня
-            </button>
-            <button class="nav-item" data-tab="month">
-                <span class="nav-icon">📅</span> Месяц
-            </button>
-            <button class="nav-item" data-tab="year">
-                <span class="nav-icon">🗓️</span> Год
-            </button>
-        </nav>
+<!-- Header -->
+<div class="header">
+    <div class="header-top">
+        <div class="header-title">График БАД</div>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</button>
     </div>
+    <div class="header-subtitle" id="currentDate"></div>
+</div>
 
-    <!-- Modal overlay (hidden by default) -->
-    <div class="modal-overlay" id="modalOverlay" style="display:none;">
-        <div class="modal-sheet" id="modalSheet">
-            <div class="modal-handle"></div>
-            <div id="modalContent"></div>
-        </div>
+<!-- Search -->
+<div class="search-bar">
+    <input type="text" class="search-input" id="searchInput" placeholder="Поиск по названию или дозировке...">
+</div>
+
+<!-- Filters -->
+<div class="filters" id="filters">
+    <button class="filter-chip active" data-filter="all">Все</button>
+    <button class="filter-chip" data-filter="permanent">Постоянные</button>
+    <button class="filter-chip" data-filter="seasonal">Сезонные</button>
+    <button class="filter-chip" data-filter="course">Курсовые</button>
+    <button class="filter-chip" data-filter="morning">Утро</button>
+    <button class="filter-chip" data-filter="day">День</button>
+    <button class="filter-chip" data-filter="evening">Вечер</button>
+</div>
+
+<!-- Section: Today -->
+<div class="section active" id="section-today">
+    <div class="today-hero">
+        <h2>Сегодня</h2>
+        <p id="todayDate"></p>
+        <div class="today-count" id="todayCount">0</div>
+        <p>БАДов к приёму</p>
     </div>
+    <div class="today-list" id="todayList"></div>
+</div>
 
-    <script>
-        (function() {
-            // ────────────────────────────────────
-            // DATA: All supplements from the spreadsheet
-            // ────────────────────────────────────
-            const supplements = [{
-                id: 'c',
-                name: 'C',
-                fullName: 'Аскорбиновая кислота / аскорбат натрия',
-                months: [11, 0, 1, 2, 7, 8, 9, 10], // Dec,Jan,Feb,Mar,Aug,Sep,Oct,Nov
-                timeOfDay: ['morning', 'day'],
-                timeLabel: 'Утро / День',
-                form: 'Аскорбиновая кислота или минеральные аскорбаты (аскорбат натрия).',
-                rules: 'После еды.',
-                dosage: '250–500 мг, 500–1000 мг',
-                combinations: '',
-                contraindications: 'Не сочетать с высокими дозами аспирина.',
-                notes: 'Курсами 4-6 недель, перерывы обязательны. Улучшает всасывание железа.',
-                category: 'vitamin'
-            }, {
-                id: 'd3k2',
-                name: 'D3+K2',
-                fullName: 'Витамин D3 + K2 (МК-7)',
-                months: [11, 0, 1, 2, 3, 4, 5, 8, 9, 10],
-                timeOfDay: ['morning', 'day'],
-                timeLabel: 'Утро / День',
-                form: 'Жирорастворимые. D3 + K2 (МК-7).',
-                rules: 'Жирорастворимые. Принимать с едой, содержащей жиры.',
-                dosage: 'D3: 2000–4000 МЕ (зима) / 600–1000 МЕ (лето). K2: 45–90 мкг.',
-                combinations: 'Синергия с C, E, B2, Mg, Se, Zn, Fe. Магний помогает активировать D3.',
-                contraindications: 'Исключить молочную продукцию для исключения излишка кальция.',
-                notes: 'Доза выше зимой, минимум/пауза летом.',
-                category: 'vitamin'
-            }, {
-                id: 'coq10',
-                name: 'CoQ10',
-                fullName: 'Коэнзим Q10 (убихинон / убихинол)',
-                months: [2, 3, 4, 8, 9, 10],
-                timeOfDay: ['day'],
-                timeLabel: 'День (Обед)',
-                form: 'Убихинон (обычная форма) или убихинол (для усвоения после 40 лет).',
-                rules: 'Жирорастворимые. Принимать во время еды.',
-                dosage: '100–200 мг.',
-                combinations: 'Синергия с витамином Е (оба антиоксиданты).',
-                contraindications: '',
-                notes: 'Поддержка сердца 40+.',
-                category: 'antioxidant'
-            }, {
-                id: 'bgroup',
-                name: 'Группа B',
-                fullName: 'Витамины группы B (комплекс)',
-                months: [2, 3, 4, 8, 9, 10],
-                timeOfDay: ['morning'],
-                timeLabel: 'Утро',
-                form: 'Водорастворимые.',
-                rules: 'До 14:00.',
-                dosage: 'По инструкции комплекса.',
-                combinations: '',
-                contraindications: '',
-                notes: 'Для энергии и поддержки нервов. Курс весной и осенью.',
-                category: 'vitamin'
-            }, {
-                id: 'iron',
-                name: 'Железо',
-                fullName: 'Железо (бисглицинат / сульфат)',
-                months: [2, 3],
-                timeOfDay: ['morning', 'day'],
-                timeLabel: 'Утро / День',
-                form: 'Бисглицинат (лучшая переносимость) или сульфат.',
-                rules: 'Натощак. Принимать с витамином C (апельсин, шиповник) для усвоения.',
-                dosage: 'Только по назначению. Профилактически: 15–30 мг элементарного.',
-                combinations: '',
-                contraindications: 'Не совмещать с кальцием, магнием, цинком, чаем, кофе (интервал 4 часа).',
-                notes: 'Принимать только при дефиците (ферритин < 30–40 нг/мл).',
-                category: 'mineral'
-            }, {
-                id: 'lecithin',
-                name: 'Лецитин',
-                fullName: 'Лецитин (фосфатидилхолин)',
-                months: [11, 2, 3, 4, 8, 9, 10],
-                timeOfDay: ['morning', 'day'],
-                timeLabel: 'Утро / День',
-                form: 'Содержит фосфатидилхолин.',
-                rules: 'Принимать с едой.',
-                dosage: '1200 мг 1–2 р/день.',
-                combinations: 'Можно комбинировать с Омега-3 для когнитивной поддержки.',
-                contraindications: '',
-                notes: 'Поддержка печени и мозга. Курс 2–3 мес непрерывно или при нагрузках.',
-                category: 'other'
-            }, {
-                id: 'magnesium',
-                name: 'Магний',
-                fullName: 'Магний (цитрат / глицинат / малат)',
-                months: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                timeOfDay: ['evening'],
-                timeLabel: 'Вечер',
-                form: 'Цитрат, глицинат (лучше усваиваются), малат.',
-                rules: '',
-                dosage: '200–400 мг (цитрат/глицинат).',
-                combinations: 'Фолиевая кислота + B6 и D3.',
-                contraindications: 'Отдельно от кальция/железа.',
-                notes: 'Можно принимать постоянно. Снижает возбудимость нервной системы, улучшает сон.',
-                category: 'mineral'
-            }, {
-                id: 'omega3',
-                name: 'Омега-3',
-                fullName: 'Омега-3 (EPA/DHA, рыбий жир)',
-                months: [11, 0, 1, 2, 3, 5, 6, 8, 9, 10],
-                timeOfDay: ['morning', 'day'],
-                timeLabel: 'Утро / День',
-                form: 'Рыбий жир, лучше в форме триглицеридов.',
-                rules: 'С едой. Принимать с жирами.',
-                dosage: '500–1000 мг EPA/DHA (база) / до 2 г (курс).',
-                combinations: '',
-                contraindications: '',
-                notes: 'Соотношение EPA:DHA ≈ 2:1. Рассмотреть постоянный приём с курсовым усилением.',
-                category: 'fattyacid'
-            }, {
-                id: 'ae',
-                name: 'A+E',
-                fullName: 'Витамины A + E',
-                months: [5, 6],
-                timeOfDay: ['day'],
-                timeLabel: 'День',
-                form: 'Жирорастворимые.',
-                rules: 'Жирорастворимые. Принимать с едой.',
-                dosage: 'A: 2500–5000 МЕ / E: 100–200 МЕ.',
-                combinations: '',
-                contraindications: '',
-                notes: 'Короткий курс (1 мес) для защиты кожи. Витамин E защищает A от окисления.',
-                category: 'vitamin'
-            }, {
-                id: 'adaptogens',
-                name: 'Адаптогены',
-                fullName: 'Адаптогены (эхинацея / женьшень)',
-                months: [11, 9, 10],
-                timeOfDay: ['morning'],
-                timeLabel: 'Утро',
-                form: 'По инструкции конкретного препарата.',
-                rules: 'До 12:00. При гипертонии/бессоннице курс ≤3 недель.',
-                dosage: 'По инструкции.',
-                combinations: '',
-                contraindications: 'Эхинацея противопоказана при аутоиммунных заболеваниях. Женьшень повышает давление.',
-                notes: 'Эхинацея или женьшень для тонуса в осенний период.',
-                category: 'herbal'
-            }, {
-                id: 'glycine',
-                name: 'Глицин',
-                fullName: 'Глицин (свободная форма)',
-                months: [11, 0, 1, 7, 8, 9, 10],
-                timeOfDay: ['evening'],
-                timeLabel: 'Вечер',
-                form: 'В свободной форме, под язык или в капсулах.',
-                rules: '',
-                dosage: '100–300 мг (до 1000–3000 мг).',
-                combinations: 'Можно сочетать с магнием.',
-                contraindications: '',
-                notes: 'Вечерний приём для спокойствия, улучшает качество сна, снижает тревожность.',
-                category: 'aminoacid'
-            }, {
-                id: 'iodine',
-                name: 'Йод',
-                fullName: 'Йод (йодид калия)',
-                months: [6, 7],
-                timeOfDay: ['morning'],
-                timeLabel: 'Утро',
-                form: 'Йодид калия.',
-                rules: 'После еды.',
-                dosage: '100–150 мкг (в регионах дефицита до 200 мкг).',
-                combinations: '',
-                contraindications: 'Не сочетать с большими дозами брома (некоторые успокоительные).',
-                notes: 'Принимать только после проверки уровня ТТГ (Кемерово — зона дефицита).',
-                category: 'mineral'
-            }, {
-                id: 'copper',
-                name: 'Медь',
-                fullName: 'Медь (цитрат / глицинат)',
-                months: [5, 6],
-                timeOfDay: ['day'],
-                timeLabel: 'День',
-                form: 'Цитрат, глицинат.',
-                rules: '',
-                dosage: '1–2 мг.',
-                combinations: '',
-                contraindications: 'Не принимать одновременно с цинком/железом.',
-                notes: 'Важно соблюдать баланс с цинком. Если цинк принимали зимой, летом можно пропить медь 1–2 месяца.',
-                category: 'mineral'
-            }, {
-                id: 'probiotics',
-                name: 'Пробиотики',
-                fullName: 'Пробиотики (Lactobacillus + Bifidobacterium)',
-                months: [11, 0, 4, 7],
-                timeOfDay: ['morning', 'evening'],
-                timeLabel: 'Утро / Вечер',
-                form: 'Полиштаммовые (Lactobacillus + Bifidobacterium).',
-                rules: 'Принимать натощак или перед едой, запивать прохладной водой.',
-                dosage: '10–50 млрд КОЕ.',
-                combinations: '',
-                contraindications: '',
-                notes: 'Курсы по 3–4 недели в периоды смены питания.',
-                category: 'probiotic'
-            }, {
-                id: 'selenium',
-                name: 'Селен',
-                fullName: 'Селен (селенометионин)',
-                months: [11, 0, 1, 8, 9, 10],
-                timeOfDay: ['day'],
-                timeLabel: 'День',
-                form: 'Селенометионин (органическая форма).',
-                rules: 'С едой.',
-                dosage: '50–100 мкг.',
-                combinations: 'Работает в синергии с цинком и витамином Е.',
-                contraindications: '',
-                notes: '',
-                category: 'mineral'
-            }, {
-                id: 'zinc',
-                name: 'Цинк',
-                fullName: 'Цинк (цитрат / пиколинат)',
-                months: [11, 0, 1, 8, 9, 10],
-                timeOfDay: ['day'],
-                timeLabel: 'День',
-                form: 'Цитрат, пиколинат (лучше усваиваются).',
-                rules: '',
-                dosage: '15–30 мг.',
-                combinations: '',
-                contraindications: 'Не совмещать в одном приёме с медью, железом или кальцием.',
-                notes: 'После курса >1–2 мес добавить медь 1–2 мг курсом.',
-                category: 'mineral'
-            }];
+<!-- Section: All -->
+<div class="section" id="section-all">
+    <div id="allList"></div>
+</div>
 
-            // ────────────────────────────────────
-            // CONSTANTS & HELPERS
-            // ────────────────────────────────────
-            const MONTH_NAMES = [
-                'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
-                'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
-            ];
-            const MONTH_SHORT = [
-                'Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн',
-                'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'
-            ];
-            const TIME_LABELS = { morning: 'Утро', day: 'День', evening: 'Вечер' };
-            const TIME_ORDER = ['morning', 'day', 'evening'];
+<!-- Section: Compatibility -->
+<div class="section" id="section-compat">
+    <div class="compat-grid" id="compatGrid"></div>
+</div>
 
-            const now = new Date();
-            let currentMonth = now.getMonth(); // 0-indexed (0=Jan)
-            let currentYear = now.getFullYear();
-            let activeTab = 'today';
-            let expandedCardId = null;
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+    <button class="nav-item active" data-section="today">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        <span>Сегодня</span>
+    </button>
+    <button class="nav-item" data-section="all">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <span>Все БАДы</span>
+    </button>
+    <button class="nav-item" data-section="compat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        <span>Совместимость</span>
+    </button>
+</nav>
 
-            // ────────────────────────────────────
-            // STORAGE
-            // ────────────────────────────────────
-            function getStorageKey() {
-                const d = new Date();
-                return 'baa-tracker-' + d.getFullYear() + '-' +
-                    String(d.getMonth() + 1).padStart(2, '0') + '-' +
-                    String(d.getDate()).padStart(2, '0');
-            }
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+        <div class="modal-handle"></div>
+        <div class="modal-content" id="modalContent"></div>
+    </div>
+</div>
 
-            function getCheckedSupplements() {
-                const key = getStorageKey();
-                try {
-                    const data = localStorage.getItem(key);
-                    return data ? JSON.parse(data) : {};
-                } catch (e) {
-                    return {};
-                }
-            }
+<script>
+// ================= DATA =================
+const months = ["Дек","Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя"];
+const now = new Date();
+// Исправлено: getMonth() возвращает 0-11 где 0=Январь, 4=Май
+const monthNames = ["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"];
+const currentMonthName = monthNames[now.getMonth()]; // теперь правильно: май = 4 -> "Май"
+const currentMonthIndex = months.indexOf(currentMonthName);
 
-            function saveCheckedSupplements(obj) {
-                const key = getStorageKey();
-                try {
-                    localStorage.setItem(key, JSON.stringify(obj));
-                } catch (e) {}
-            }
+const supplements = [
+    {"name":"C","schedule":{"Дек":true,"Янв":true,"Фев":true,"Мар":true,"Апр":false,"Май":false,"Июн":false,"Июл":false,"Авг":true,"Сен":true,"Окт":true,"Ноя":true},"form":"Аскорбиновая кислота или минеральные аскорбаты (аскорбат натрия).","time":"Утро / День","rules":"После еды.","dosage":"250-500 мг, 500–1000 мг","synergy":"","incompatible":"Не сочетать с высокими дозами аспирина.","notes":"Курсами 4-6 недель, перерывы обязательны. Улучшает всасывание железа."},
+    {"name":"D3+K2","schedule":{"Дек":true,"Янв":true,"Фев":true,"Мар":true,"Апр":true,"Май":true,"Июн":true,"Июл":false,"Авг":false,"Сен":true,"Окт":true,"Ноя":true},"form":"","time":"Утро / День","rules":"Жирорастворимые.","dosage":"D3: 2000-4000 МЕ (зима) / 600-1000 МЕ (лето). K2 (МК-7): 45–90 мкг","synergy":"Применение совместно с C, E, B2, Mg, Se, Zn, Fe. Магний помогает активировать D3.","incompatible":"Исключить молочную продукцию для исключения излишка кальция.","notes":"Доза выше зимой, минимум/пауза летом"},
+    {"name":"CoQ10","schedule":{"Дек":false,"Янв":false,"Фев":false,"Мар":true,"Апр":true,"Май":true,"Июн":false,"Июл":false,"Авг":false,"Сен":true,"Окт":true,"Ноя":true},"form":"Убихинон (обычная форма) или убихинол (для усвоения после 40 лет).","time":"Обед","rules":"Жирорастворимые.","dosage":"100-200 мг.","synergy":"Синергия с витамином Е (оба антиоксиданты).","incompatible":"","notes":"Поддержка сердца 40+."},
+    {"name":"Группа B","schedule":{"Дек":false,"Янв":false,"Фев":false,"Мар":true,"Апр":true,"Май":true,"Июн":false,"Июл":false,"Авг":false,"Сен":true,"Окт":true,"Ноя":true},"form":"Водорастворимые.","time":"Утро","rules":"До 14:00.","dosage":"","synergy":"","incompatible":"","notes":"Для энергии и поддержки нервов. Курс весной и осенью."},
+    {"name":"Железо","schedule":{"Дек":false,"Янв":false,"Фев":false,"Мар":true,"Апр":true,"Май":false,"Июн":false,"Июл":false,"Авг":false,"Сен":false,"Окт":false,"Ноя":false},"form":"Бисглицинат (лучшая переносимость) или сульфат.","time":"Утро / День","rules":"Натощак. Принимать с витамином C (апельсин, шиповник) для усвоения.","dosage":"Только по назначению. Профилактически: 15–30 мг элементарного.","synergy":"","incompatible":"Не совмещать с кальцием, магнием, цинком, чаем, кофе (интервал 4 часа).","notes":"Принимать только при дефиците, (ферритин < 30–40 нг/мл)."},
+    {"name":"Лецитин","schedule":{"Дек":true,"Янв":false,"Фев":false,"Мар":true,"Апр":true,"Май":true,"Июн":false,"Июл":false,"Авг":false,"Сен":true,"Окт":true,"Ноя":true},"form":"","time":"Утро / День","rules":"Содержит фосфатидилхолин. Принимать с едой.","dosage":"1200 мг 1-2 р/день.","synergy":"Можно комбинировать с Омега-3 для когнитивной поддержки.","incompatible":"","notes":"Поддержка печени и мозга. Курс 2-3 мес непрерывно или при нагрузках."},
+    {"name":"Магний","schedule":{"Дек":true,"Янв":true,"Фев":true,"Мар":true,"Апр":true,"Май":true,"Июн":true,"Июл":true,"Авг":true,"Сен":true,"Окт":true,"Ноя":true},"form":"Цитрат, глицинат (лучше усваиваются), малат.","time":"Вечер","rules":"","dosage":"200-400 мг (цитрат/глицинат).","synergy":"Фолиевая кислота + B6 и D3.","incompatible":"Отдельно от кальция/железа.","notes":"Можно принимать постоянно. Магний снижает возбудимость нервной системы, улучшает сон."},
+    {"name":"Омега - 3 (EPA/DHA)","schedule":{"Дек":true,"Янв":true,"Фев":true,"Мар":true,"Апр":true,"Май":false,"Июн":true,"Июл":true,"Авг":false,"Сен":true,"Окт":true,"Ноя":true},"form":"Рыбий жир, лучше в форме триглицеридов.","time":"Утро / День","rules":"С едой. Принимать с жирами.","dosage":"500-1000 мг EPA/DHA (база) / до 2 г (курс).","synergy":"","incompatible":"","notes":"Для сердца и сосудов предпочтительно соотношение EPA : DHA ≈ 2:1 (например, 700 мг EPA / 300 мг DHA). Рассмотреть постоянный приём с курсовым усилением."},
+    {"name":"A+E","schedule":{"Дек":false,"Янв":false,"Фев":false,"Мар":false,"Апр":false,"Май":false,"Июн":true,"Июл":true,"Авг":false,"Сен":false,"Окт":false,"Ноя":false},"form":"","time":"День","rules":"Жирорастворимые.","dosage":"A: 2500-5000 МЕ / E: 100-200 МЕ","synergy":"","incompatible":"","notes":"Короткий курс (1 мес) для защиты кожи. Витамин E защищает A от окисления."},
+    {"name":"Адаптогены","schedule":{"Дек":true,"Янв":false,"Фев":false,"Мар":false,"Апр":false,"Май":false,"Июн":false,"Июл":false,"Авг":false,"Сен":false,"Окт":true,"Ноя":true},"form":"","time":"Утро","rules":"До 12:00. При гипертонии/бессоннице, курс ≤3 недель.","dosage":"По инструкции.","synergy":"","incompatible":"Эхинацея противопоказана при аутоиммунных заболеваниях. Женьшень повышает давление – осторожно гипертоникам.","notes":"Эхинацея или женьшень для тонуса в осенний период."},
+    {"name":"Глицин","schedule":{"Дек":true,"Янв":true,"Фев":true,"Мар":false,"Апр":false,"Май":false,"Июн":false,"Июл":false,"Авг":true,"Сен":true,"Окт":true,"Ноя":true},"form":"В свободной форме, под язык или в капсулах.","time":"Вечер","rules":"","dosage":"100-300 мг. 1000–3000 мг.","synergy":"Можно сочетать с магнием.","incompatible":"","notes":"Вечерний прием для спокойствия, улучшает качество сна, снижает тревожность."},
+    {"name":"Йод","schedule":{"Дек":false,"Янв":false,"Фев":false,"Мар":false,"Апр":false,"Май":false,"Июн":false,"Июл":true,"Авг":true,"Сен":false,"Окт":false,"Ноя":false},"form":"Йодид калия.","time":"Утро","rules":"После еды.","dosage":"100-150 мкг (в регионах дефицита до 200 мкг).","synergy":"","incompatible":"Не сочетать с большими дозами брома (некоторые успокоительные).","notes":"Принимать только после проверки уровня ТТГ (Кемерово — зона дефицита)."},
+    {"name":"Медь","schedule":{"Дек":false,"Янв":false,"Фев":false,"Мар":false,"Апр":false,"Май":false,"Июн":true,"Июл":true,"Авг":false,"Сен":false,"Окт":false,"Ноя":false},"form":"Цитрат, глицинат.","time":"День","rules":"","dosage":"1-2 мг.","synergy":"","incompatible":"Не принимать одновременно с цинком/железом.","notes":"Важно соблюдать баланс с цинком. Если цинк принимали зимой, летом можно пропить медь 1–2 месяца."},
+    {"name":"Пробиотики","schedule":{"Дек":true,"Янв":true,"Фев":false,"Мар":false,"Апр":false,"Май":true,"Июн":false,"Июл":false,"Авг":true,"Сен":false,"Окт":false,"Ноя":false},"form":"Полиштаммовые (Lactobacillus + Bifidobacterium).","time":"Утро / Вечер","rules":"Принимать натощак или перед едой, запивать прохладной водой.","dosage":"10–50 млрд КОЕ.","synergy":"","incompatible":"","notes":"Курсы по 3-4 недели в периоды смены питания."},
+    {"name":"Селен","schedule":{"Дек":true,"Янв":true,"Фев":true,"Мар":false,"Апр":false,"Май":false,"Июн":false,"Июл":false,"Авг":true,"Сен":true,"Окт":true,"Ноя":true},"form":"Селенометионин (органическая форма).","time":"День","rules":"С едой.","dosage":"50-100 мкг.","synergy":"Работает в синергии с цинком и витамином Е.","incompatible":"","notes":""},
+    {"name":"Цинк","schedule":{"Дек":true,"Янв":true,"Фев":true,"Мар":false,"Апр":false,"Май":false,"Июн":false,"Июл":false,"Авг":true,"Сен":true,"Окт":true,"Ноя":true},"form":"Цитрат, пиколинат (лучше усваиваются).","time":"День","rules":"","dosage":"15-30 мг.","synergy":"","incompatible":"Не совмещать в одном приеме с медью, железом или кальцием.","notes":"После курса >1-2 мес добавить медь 1-2 мг курсом."}
+];
 
-            function resetTodayChecks() {
-                const key = getStorageKey();
-                try { localStorage.removeItem(key); } catch (e) {}
-            }
+// ================= THEME =================
+function initTheme() {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = saved === 'dark' || (!saved && prefersDark);
+    setTheme(isDark);
+}
 
-            // ────────────────────────────────────
-            // GET SUPPLEMENTS FOR A GIVEN MONTH
-            // ────────────────────────────────────
-            function getSupplementsForMonth(monthIndex) {
-                return supplements.filter(s => s.months.includes(monthIndex));
-            }
+function setTheme(isDark) {
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    document.getElementById('themeToggle').textContent = isDark ? '☀️' : '🌙';
+    document.getElementById('themeColor').setAttribute('content', isDark ? '#1E1E1E' : '#4CAF50');
+}
 
-            function getTodaySupplements() {
-                const monthSupps = getSupplementsForMonth(currentMonth);
-                return monthSupps;
-            }
+function toggleTheme() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const newDark = !isDark;
+    setTheme(newDark);
+    localStorage.setItem('theme', newDark ? 'dark' : 'light');
+}
 
-            // ────────────────────────────────────
-            // RENDER FUNCTIONS
-            // ────────────────────────────────────
-            function renderHeader() {
-                document.getElementById('monthName').textContent = MONTH_NAMES[currentMonth] + ' ' + currentYear;
-                const d = new Date();
-                const dayNames = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
-                document.getElementById('headerDate').textContent =
-                    dayNames[d.getDay()] + ', ' + d.getDate() + ' ' +
-                    MONTH_NAMES[d.getMonth()].toLowerCase().slice(0, 3) + ' ' + d.getFullYear();
-            }
+// ================= HELPERS =================
+function getActiveMonths(s) {
+    return months.filter(m => s.schedule[m]);
+}
+function getCategory(s) {
+    const count = getActiveMonths(s).length;
+    if (count >= 10) return 'permanent';
+    if (count >= 3) return 'seasonal';
+    return 'course';
+}
+function getCategoryLabel(cat) {
+    return {permanent:'Постоянный', seasonal:'Сезонный', course:'Курсовой'}[cat];
+}
+function getCategoryClass(cat) {
+    return {permanent:'badge-permanent', seasonal:'badge-seasonal', course:'badge-course'}[cat];
+}
+function isActiveToday(s) {
+    return s.schedule[currentMonthName];
+}
+function getTimeType(time) {
+    if (time.includes('Утро')) return 'morning';
+    if (time.includes('Вечер')) return 'evening';
+    if (time.includes('День') || time.includes('Обед')) return 'day';
+    return 'day';
+}
+function getTimeClass(type) {
+    return {morning:'chip-morning', day:'chip-day', evening:'chip-evening'}[type] || 'chip-day';
+}
+function getTimeLabel(type) {
+    return {morning:'☀️ Утро', day:'🌤️ День', evening:'🌙 Вечер'}[type] || type;
+}
 
-            function renderDailyProgress() {
-                const todaySupps = getTodaySupplements();
-                const checked = getCheckedSupplements();
-                const total = todaySupps.length;
-                const done = todaySupps.filter(s => checked[s.id]).length;
-                const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+// ================= RENDER =================
+function renderCard(s, isTodaySection=false) {
+    const activeMonths = getActiveMonths(s);
+    const cat = getCategory(s);
+    const isActive = isActiveToday(s);
+    const timeType = getTimeType(s.time);
 
-                document.getElementById('progressText').textContent = done + '/' + total;
-                document.getElementById('progressTitle').textContent =
-                    total === 0 ? 'Нет приёма на сегодня' : 'Приём на сегодня';
-                document.getElementById('progressSub').textContent =
-                    total === 0 ? 'Наслаждайтесь днём!' :
-                    done === total ? '✅ Всё принято!' :
-                    'Осталось: ' + (total - done);
+    let monthsHtml = months.map(m => {
+        const active = s.schedule[m];
+        const isCur = m === currentMonthName;
+        return `<div class="month-dot ${active ? 'active' : ''} ${isCur ? 'current' : ''}">${m}</div>`;
+    }).join('');
 
-                const circle = document.getElementById('progressCircle');
-                const circumference = 138.23;
-                const offset = circumference - (pct / 100) * circumference;
-                circle.style.strokeDashoffset = offset;
-                if (done === total && total > 0) {
-                    circle.style.stroke = '#4a8c6f';
-                } else if (done > 0) {
-                    circle.style.stroke = '#7db894';
-                } else {
-                    circle.style.stroke = '#4a8c6f';
-                }
-            }
+    return `
+    <div class="card ${isTodaySection && isActive ? 'today-active' : ''}" onclick="openModal('${s.name}')">
+        <div class="card-header">
+            <div class="card-title">${s.name}</div>
+            <div class="card-badge ${getCategoryClass(cat)}">${getCategoryLabel(cat)}</div>
+        </div>
+        <div class="card-dosage">${s.dosage || 'Дозировка по назначению'}</div>
+        <div class="card-meta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            ${s.time}
+        </div>
+        <div class="card-months">${monthsHtml}</div>
+    </div>`;
+}
 
-            function createSupplementCard(supp, isTodayView = false) {
-                const checked = getCheckedSupplements();
-                const isChecked = !!checked[supp.id];
-                const isExpanded = expandedCardId === supp.id;
+function renderToday() {
+    const todayItems = supplements.filter(isActiveToday);
+    document.getElementById('todayCount').textContent = todayItems.length;
+    document.getElementById('todayList').innerHTML = todayItems.length 
+        ? todayItems.map(s => renderCard(s, true)).join('')
+        : `<div class="empty"><div class="empty-icon">🌿</div><p>Сегодня нет запланированных БАДов</p></div>`;
+}
 
-                const card = document.createElement('div');
-                card.className = 'supplement-card' + (isChecked ? ' checked' : '') + (isExpanded ?
-                    ' expanded' : '');
-                card.setAttribute('data-supplement-id', supp.id);
-                card.style.animationDelay = (Math.random() * 0.15) + 's';
+function renderAll(filter='all', search='') {
+    let items = [...supplements];
 
-                const timeTags = supp.timeOfDay.map(t =>
-                    `<span class="card-tag tag-${t === 'morning' ? 'morning' : t === 'day' ? 'day' : 'evening'}">${TIME_LABELS[t]}</span>`
-                ).join('');
+    if (filter === 'permanent') items = items.filter(s => getCategory(s) === 'permanent');
+    else if (filter === 'seasonal') items = items.filter(s => getCategory(s) === 'seasonal');
+    else if (filter === 'course') items = items.filter(s => getCategory(s) === 'course');
+    else if (filter === 'morning') items = items.filter(s => getTimeType(s.time) === 'morning');
+    else if (filter === 'day') items = items.filter(s => getTimeType(s.time) === 'day');
+    else if (filter === 'evening') items = items.filter(s => getTimeType(s.time) === 'evening');
 
-                card.innerHTML = `
-                <div class="check-circle">✓</div>
-                <div class="card-info">
-                  <div class="card-name">${supp.name}</div>
-                  <div class="card-meta">
-                    ${timeTags}
-                    <span class="card-dosage">${supp.dosage}</span>
-                  </div>
-                </div>
-                <span class="card-chevron">▾</span>
-                <div class="card-details">
-                  <div class="detail-row">
-                    <div class="detail-label">Форма</div>
-                    <div class="detail-value">${supp.form}</div>
-                  </div>
-                  <div class="detail-row">
-                    <div class="detail-label">Время приёма</div>
-                    <div class="detail-value">${supp.timeLabel}</div>
-                  </div>
-                  ${supp.rules ? `<div class="detail-row">
-                    <div class="detail-label">Правила</div>
-                    <div class="detail-value">${supp.rules}</div>
-                  </div>` : ''}
-                  <div class="detail-row">
-                    <div class="detail-label">Дозировка</div>
-                    <div class="detail-value">${supp.dosage}</div>
-                  </div>
-                  ${supp.combinations ? `<div class="detail-row">
-                    <div class="detail-label">Совместное применение</div>
-                    <div class="detail-value">${supp.combinations}</div>
-                  </div>` : ''}
-                  ${supp.contraindications ? `<div class="detail-warning">⚠️ ${supp.contraindications}</div>` : ''}
-                  ${supp.notes ? `<div class="detail-tip">💡 ${supp.notes}</div>` : ''}
-                </div>
-              `;
+    if (search) {
+        const q = search.toLowerCase();
+        items = items.filter(s => 
+            s.name.toLowerCase().includes(q) || 
+            s.dosage.toLowerCase().includes(q) ||
+            s.form.toLowerCase().includes(q)
+        );
+    }
 
-                // Click on check circle
-                const checkCircle = card.querySelector('.check-circle');
-                checkCircle.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    toggleSupplementCheck(supp.id);
-                });
+    document.getElementById('allList').innerHTML = items.length 
+        ? items.map(s => renderCard(s)).join('')
+        : `<div class="empty"><div class="empty-icon">🔍</div><p>Ничего не найдено</p></div>`;
+}
 
-                // Click on card body to expand/collapse
-                card.addEventListener('click', (e) => {
-                    if (e.target.closest('.check-circle')) return;
-                    if (expandedCardId === supp.id) {
-                        expandedCardId = null;
-                    } else {
-                        expandedCardId = supp.id;
-                    }
-                    refreshView();
-                });
+function renderCompatibility() {
+    const goodPairs = [];
+    const badPairs = [];
 
-                return card;
-            }
+    supplements.forEach(s => {
+        if (s.synergy) {
+            badPairs.push({name: s.name, note: s.synergy, type:'good'});
+        }
+        if (s.incompatible) {
+            badPairs.push({name: s.name, note: s.incompatible, type:'bad'});
+        }
+    });
 
-            function toggleSupplementCheck(suppId) {
-                const checked = getCheckedSupplements();
-                if (checked[suppId]) {
-                    delete checked[suppId];
-                } else {
-                    checked[suppId] = true;
-                }
-                saveCheckedSupplements(checked);
-                refreshView();
-                const supp = supplements.find(s => s.id === suppId);
-                if (supp && checked[suppId]) {
-                    showToast('✅ ' + supp.name + ' — принято!');
-                }
-            }
+    let html = '';
 
-            function showToast(message) {
-                const existing = document.querySelector('.toast');
-                if (existing) existing.remove();
-                const toast = document.createElement('div');
-                toast.className = 'toast';
-                toast.textContent = message;
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 1800);
-            }
+    if (badPairs.filter(p=>p.type==='bad').length) {
+        html += `<div class="compat-card" style="grid-column: 1 / -1; margin-bottom: 12px;">
+            <h4><span class="compat-bad">⚠️</span> Важные несовместимости</h4>
+            <ul>`;
+        badPairs.filter(p=>p.type==='bad').forEach(p => {
+            html += `<li><strong>${p.name}:</strong> ${p.note}</li>`;
+        });
+        html += `</ul></div>`;
+    }
 
-            function renderTodayView() {
-                const todaySupps = getTodaySupplements();
-                const container = document.getElementById('mainContent');
-                container.innerHTML = '';
+    if (badPairs.filter(p=>p.type==='good').length) {
+        html += `<div class="compat-card" style="grid-column: 1 / -1; margin-bottom: 12px;">
+            <h4><span class="compat-good">✅</span> Синергия (усиливают действие друг друга)</h4>
+            <ul>`;
+        badPairs.filter(p=>p.type==='good').forEach(p => {
+            html += `<li><strong>${p.name}:</strong> ${p.note}</li>`;
+        });
+        html += `</ul></div>`;
+    }
 
-                if (todaySupps.length === 0) {
-                    container.innerHTML = `
-                  <div class="empty-state">
-                    <div class="icon">🌿</div>
-                    <p>В этом месяце приём БАД не запланирован.</p>
-                    <p style="font-size:0.75rem;color:#aaa;">Переключитесь на вкладку «Месяц» для просмотра.</p>
-                  </div>`;
-                    return;
-                }
+    html += `<div class="compat-card">
+        <h4>☀️ Утром</h4>
+        <ul>${supplements.filter(s => getTimeType(s.time)==='morning').map(s => `<li>${s.name}</li>`).join('')}</ul>
+    </div>`;
+    html += `<div class="compat-card">
+        <h4>🌤️ Днём</h4>
+        <ul>${supplements.filter(s => getTimeType(s.time)==='day').map(s => `<li>${s.name}</li>`).join('')}</ul>
+    </div>`;
+    html += `<div class="compat-card">
+        <h4>🌙 Вечером</h4>
+        <ul>${supplements.filter(s => getTimeType(s.time)==='evening').map(s => `<li>${s.name}</li>`).join('')}</ul>
+    </div>`;
+    html += `<div class="compat-card">
+        <h4>🔄 Гибко</h4>
+        <ul>${supplements.filter(s => s.time.includes('/')).map(s => `<li>${s.name} (${s.time})</li>`).join('')}</ul>
+    </div>`;
 
-                // Group by time of day
-                const groups = { morning: [], day: [], evening: [] };
-                todaySupps.forEach(s => {
-                    s.timeOfDay.forEach(t => {
-                        if (groups[t]) groups[t].push(s);
-                    });
-                });
+    document.getElementById('compatGrid').innerHTML = html;
+}
 
-                TIME_ORDER.forEach(timeKey => {
-                    const sups = groups[timeKey];
-                    if (sups.length === 0) return;
-                    const dotClass = timeKey === 'morning' ? 'dot-morning' : timeKey === 'day' ?
-                        'dot-day' : 'dot-evening';
-                    const sectionTitle = document.createElement('div');
-                    sectionTitle.className = 'section-title';
-                    sectionTitle.innerHTML =
-                        `<span class="dot ${dotClass}"></span>${TIME_LABELS[timeKey]} (${sups.length})`;
-                    container.appendChild(sectionTitle);
+// ================= MODAL =================
+function openModal(name) {
+    const s = supplements.find(x => x.name === name);
+    if (!s) return;
 
-                    // Deduplicate (a supplement may appear in multiple time groups)
-                    const seen = new Set();
-                    sups.forEach(s => {
-                        if (!seen.has(s.id)) {
-                            seen.add(s.id);
-                            container.appendChild(createSupplementCard(s, true));
-                        }
-                    });
-                });
-            }
+    const timeChips = s.time.split('/').map(t => {
+        const type = getTimeType(t.trim());
+        return `<span class="time-chip ${getTimeClass(type)}">${getTimeLabel(type)}</span>`;
+    }).join('');
 
-            function renderMonthView() {
-                const monthSupps = getSupplementsForMonth(currentMonth);
-                const container = document.getElementById('mainContent');
-                container.innerHTML = '';
+    const scheduleGrid = months.map((m, i) => {
+        const active = s.schedule[m];
+        const isCur = m === currentMonthName;
+        return `<div class="schedule-cell ${active ? 'active' : ''} ${isCur ? 'current' : ''}">${m}<span>${active ? '✓' : '—'}</span></div>`;
+    }).join('');
 
-                if (monthSupps.length === 0) {
-                    container.innerHTML = `
-                  <div class="empty-state">
-                    <div class="icon">📭</div>
-                    <p>В ${MONTH_NAMES[currentMonth].toLowerCase()} приём БАД не запланирован.</p>
-                  </div>`;
-                    return;
-                }
+    let infoHtml = '';
+    if (s.form) infoHtml += `<div class="info-block"><div class="info-block-label">💊 Форма</div><div class="info-block-text">${s.form}</div></div>`;
+    if (s.dosage) infoHtml += `<div class="info-block"><div class="info-block-label">⚖️ Дозировка</div><div class="info-block-text">${s.dosage}</div></div>`;
+    if (s.rules) infoHtml += `<div class="info-block"><div class="info-block-label">📋 Правила приёма</div><div class="info-block-text">${s.rules}</div></div>`;
+    if (s.synergy) infoHtml += `<div class="info-block success"><div class="info-block-label">✅ Совместимость</div><div class="info-block-text">${s.synergy}</div></div>`;
+    if (s.incompatible) infoHtml += `<div class="info-block warning"><div class="info-block-label">⚠️ Не сочетается с</div><div class="info-block-text">${s.incompatible}</div></div>`;
+    if (s.notes) infoHtml += `<div class="info-block"><div class="info-block-label">📝 Примечание</div><div class="info-block-text">${s.notes}</div></div>`;
 
-                const sectionTitle = document.createElement('div');
-                sectionTitle.className = 'section-title';
-                sectionTitle.textContent = 'Все БАДы на ' + MONTH_NAMES[currentMonth].toLowerCase() +
-                    ' (' + monthSupps.length + ')';
-                container.appendChild(sectionTitle);
+    const isTaken = localStorage.getItem('taken_' + name + '_' + now.toDateString());
 
-                monthSupps.forEach(s => {
-                    container.appendChild(createSupplementCard(s, false));
-                });
-            }
+    document.getElementById('modalContent').innerHTML = `
+        <div class="modal-header">
+            <div class="modal-title">${s.name}</div>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="time-chips">${timeChips}</div>
+        <div style="margin-bottom: 16px;">
+            <div class="info-block-label" style="margin-bottom: 8px;">📅 График приёма по месяцам</div>
+            <div class="schedule-grid">${scheduleGrid}</div>
+        </div>
+        ${infoHtml}
+        <button class="check-btn ${isTaken ? 'checked' : ''}" onclick="toggleTaken('${s.name}', this)">
+            ${isTaken ? '✓ Принято сегодня' : 'Отметить принято'}
+        </button>
+    `;
 
-            function renderYearView() {
-                const container = document.getElementById('mainContent');
-                container.innerHTML = '';
+    document.getElementById('modalOverlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
 
-                const sectionTitle = document.createElement('div');
-                sectionTitle.className = 'section-title';
-                sectionTitle.textContent = 'Годовой обзор';
-                container.appendChild(sectionTitle);
+function closeModal(e) {
+    if (e && e.target !== e.currentTarget) return;
+    document.getElementById('modalOverlay').classList.remove('show');
+    document.body.style.overflow = '';
+}
 
-                const gridWrapper = document.createElement('div');
-                gridWrapper.className = 'year-grid-container';
-                gridWrapper.innerHTML = `
-              <div class="year-grid">
-                <div class="yg-cell yg-header yg-name">БАД</div>
-                ${MONTH_SHORT.map((m, i) => {
-                  const isCurrent = i === currentMonth;
-                  return `<div class="yg-cell yg-header${isCurrent ? ' yg-highlight-col' : ''}">${m}</div>`;
-                }).join('')}
-                ${supplements.map(s => `
-                  <div class="yg-cell yg-name">${s.name}</div>
-                  ${Array.from({length:12}, (_, i) => {
-                    const active = s.months.includes(i);
-                    const isCurrentMonth = i === currentMonth;
-                    return `<div class="yg-cell${isCurrentMonth ? ' yg-highlight-col' : ''}">
-                      ${active ? '<span class="yg-active">●</span>' : '<span class="yg-inactive">·</span>'}
-                    </div>`;
-                  }).join('')}
-                `).join('')}
-              </div>`;
-                container.appendChild(gridWrapper);
+function toggleTaken(name, btn) {
+    const key = 'taken_' + name + '_' + now.toDateString();
+    if (localStorage.getItem(key)) {
+        localStorage.removeItem(key);
+        btn.classList.remove('checked');
+        btn.textContent = 'Отметить принято';
+    } else {
+        localStorage.setItem(key, '1');
+        btn.classList.add('checked');
+        btn.textContent = '✓ Принято сегодня';
+    }
+}
 
-                const legend = document.createElement('div');
-                legend.style.cssText =
-                    'display:flex;gap:16px;padding:10px 6px;font-size:0.75rem;color:#8a8a8a;flex-wrap:wrap;';
-                legend.innerHTML =
-                    '<span>● — приём в этом месяце</span><span>· — перерыв</span><span style="background:#fafff8;padding:2px 8px;border-radius:10px;">▨ — текущий месяц</span>';
-                container.appendChild(legend);
-            }
+// ================= NAVIGATION =================
+let currentFilter = 'all';
+let currentSection = 'today';
 
-            function refreshView() {
-                renderHeader();
-                renderDailyProgress();
-                expandedCardId = null; // reset expansions on view switch
-                if (activeTab === 'today') renderTodayView();
-                else if (activeTab === 'month') renderMonthView();
-                else if (activeTab === 'year') renderYearView();
-                updateNavButtons();
-            }
+function showSection(section) {
+    currentSection = section;
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.nav-item[data-section="' + section + '"]').forEach(b => b.classList.add('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById('section-' + section).classList.add('active');
 
-            function updateNavButtons() {
-                document.querySelectorAll('.nav-item').forEach(btn => {
-                    btn.classList.toggle('active', btn.getAttribute('data-tab') === activeTab);
-                });
-            }
+    if (section === 'today') renderToday();
+    if (section === 'all') renderAll(currentFilter, document.getElementById('searchInput').value);
+    if (section === 'compat') renderCompatibility();
 
-            // ────────────────────────────────────
-            // EVENT HANDLERS
-            // ────────────────────────────────────
-            document.getElementById('btnPrev').addEventListener('click', () => {
-                currentMonth--;
-                if (currentMonth < 0) { currentMonth = 11;
-                    currentYear--; }
-                if (activeTab === 'today') activeTab = 'month';
-                refreshView();
-            });
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
 
-            document.getElementById('btnNext').addEventListener('click', () => {
-                currentMonth++;
-                if (currentMonth > 11) { currentMonth = 0;
-                    currentYear++; }
-                if (activeTab === 'today') activeTab = 'month';
-                refreshView();
-            });
+document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => showSection(btn.dataset.section));
+});
 
-            document.getElementById('btnToday').addEventListener('click', () => {
-                const today = new Date();
-                currentMonth = today.getMonth();
-                currentYear = today.getFullYear();
-                activeTab = 'today';
-                refreshView();
-            });
+document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        currentFilter = chip.dataset.filter;
+        // Если не на вкладке "Все БАДы", переключаемся на неё
+        if (currentSection !== 'all') {
+            showSection('all');
+        } else {
+            renderAll(currentFilter, document.getElementById('searchInput').value);
+        }
+    });
+});
 
-            document.getElementById('btnReset').addEventListener('click', () => {
-                resetTodayChecks();
-                refreshView();
-                showToast('🔄 Отметки сброшены');
-            });
+document.getElementById('searchInput').addEventListener('input', (e) => {
+    if (currentSection !== 'all') {
+        showSection('all');
+    }
+    renderAll(currentFilter, e.target.value);
+});
 
-            // Bottom nav
-            document.querySelectorAll('.nav-item').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    activeTab = btn.getAttribute('data-tab');
-                    if (activeTab === 'today') {
-                        const today = new Date();
-                        currentMonth = today.getMonth();
-                        currentYear = today.getFullYear();
-                    }
-                    refreshView();
-                });
-            });
+// ================= INIT =================
+initTheme();
+document.getElementById('currentDate').textContent = now.toLocaleDateString('ru-RU', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
+document.getElementById('todayDate').textContent = now.toLocaleDateString('ru-RU', {weekday: 'long', day: 'numeric', month: 'long'});
 
-            // Modal overlay click to close
-            document.getElementById('modalOverlay').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.style.display = 'none';
-                }
-            });
+renderToday();
+renderAll();
+renderCompatibility();
 
-            // Swipe support for month navigation
-            let touchStartX = 0;
-            let touchStartY = 0;
-            document.getElementById('mainContent').addEventListener('touchstart', function(e) {
-                touchStartX = e.touches[0].clientX;
-                touchStartY = e.touches[0].clientY;
-            }, { passive: true });
-
-            document.getElementById('mainContent').addEventListener('touchend', function(e) {
-                const dx = e.changedTouches[0].clientX - touchStartX;
-                const dy = e.changedTouches[0].clientY - touchStartY;
-                if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 60) {
-                    if (dx < -40) {
-                        // swipe left = next month
-                        currentMonth++;
-                        if (currentMonth > 11) { currentMonth = 0;
-                            currentYear++; }
-                        if (activeTab === 'today') activeTab = 'month';
-                        refreshView();
-                    } else if (dx > 40) {
-                        // swipe right = prev month
-                        currentMonth--;
-                        if (currentMonth < 0) { currentMonth = 11;
-                            currentYear--; }
-                        if (activeTab === 'today') activeTab = 'month';
-                        refreshView();
-                    }
-                }
-            });
-
-            // ────────────────────────────────────
-            // INIT
-            // ────────────────────────────────────
-            function init() {
-                renderHeader();
-                renderDailyProgress();
-                renderTodayView();
-                updateNavButtons();
-            }
-
-            init();
-
-            // Refresh every minute to handle day change
-            setInterval(() => {
-                const newKey = getStorageKey();
-                const oldKey = localStorage.getItem('_last_key') || '';
-                if (newKey !== oldKey) {
-                    localStorage.setItem('_last_key', newKey);
-                    refreshView();
-                }
-                renderDailyProgress();
-            }, 30000);
-
-            console.log('🌿 График БАД — приложение готово.');
-            console.log('   ' + supplements.length + ' добавок загружено.');
-            console.log('   Текущий месяц: ' + MONTH_NAMES[currentMonth] + ' ' + currentYear);
-            console.log('   Активно для приёма сегодня: ' + getTodaySupplements().length + ' наименований.');
-        })();
-    </script>
+// Swipe to close modal
+let touchStartY = 0;
+document.getElementById('modalOverlay').addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; });
+document.getElementById('modalOverlay').addEventListener('touchmove', e => {
+    if (e.touches[0].clientY - touchStartY > 100) closeModal();
+});
+</script>
 </body>
 </html>
