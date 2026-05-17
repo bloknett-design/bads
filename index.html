@@ -105,31 +105,6 @@
             margin-top: 2px;
         }
 
-        /* Search */
-        .search-bar {
-            padding: 0 16px 12px;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 70px;
-            z-index: 99;
-            transition: background 0.3s, border-color 0.3s;
-        }
-        .search-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 16px;
-            font-family: inherit;
-            background: var(--bg);
-            color: var(--text);
-            outline: none;
-            transition: border-color 0.2s, background 0.3s, color 0.3s;
-        }
-        .search-input:focus { border-color: var(--primary); }
-        .search-input::placeholder { color: var(--text-secondary); }
-
         /* Filters */
         .filters {
             display: flex;
@@ -141,7 +116,7 @@
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             position: sticky;
-            top: 130px;
+            top: 70px;
             z-index: 98;
             transition: background 0.3s, border-color 0.3s;
         }
@@ -514,11 +489,6 @@
     <div class="header-subtitle" id="currentDate"></div>
 </div>
 
-<!-- Search -->
-<div class="search-bar">
-    <input type="text" class="search-input" id="searchInput" placeholder="Поиск по названию или дозировке...">
-</div>
-
 <!-- Filters -->
 <div class="filters" id="filters">
     <button class="filter-chip active" data-filter="all">Все</button>
@@ -579,9 +549,8 @@
 // ================= DATA =================
 const months = ["Дек","Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя"];
 const now = new Date();
-// Исправлено: getMonth() возвращает 0-11 где 0=Январь, 4=Май
 const monthNames = ["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"];
-const currentMonthName = monthNames[now.getMonth()]; // теперь правильно: май = 4 -> "Май"
+const currentMonthName = monthNames[now.getMonth()];
 const currentMonthIndex = months.indexOf(currentMonthName);
 
 const supplements = [
@@ -692,7 +661,7 @@ function renderToday() {
         : `<div class="empty"><div class="empty-icon">🌿</div><p>Сегодня нет запланированных БАДов</p></div>`;
 }
 
-function renderAll(filter='all', search='') {
+function renderAll(filter='all') {
     let items = [...supplements];
 
     if (filter === 'permanent') items = items.filter(s => getCategory(s) === 'permanent');
@@ -701,15 +670,6 @@ function renderAll(filter='all', search='') {
     else if (filter === 'morning') items = items.filter(s => getTimeType(s.time) === 'morning');
     else if (filter === 'day') items = items.filter(s => getTimeType(s.time) === 'day');
     else if (filter === 'evening') items = items.filter(s => getTimeType(s.time) === 'evening');
-
-    if (search) {
-        const q = search.toLowerCase();
-        items = items.filter(s => 
-            s.name.toLowerCase().includes(q) || 
-            s.dosage.toLowerCase().includes(q) ||
-            s.form.toLowerCase().includes(q)
-        );
-    }
 
     document.getElementById('allList').innerHTML = items.length 
         ? items.map(s => renderCard(s)).join('')
@@ -848,7 +808,7 @@ function showSection(section) {
     document.getElementById('section-' + section).classList.add('active');
 
     if (section === 'today') renderToday();
-    if (section === 'all') renderAll(currentFilter, document.getElementById('searchInput').value);
+    if (section === 'all') renderAll(currentFilter);
     if (section === 'compat') renderCompatibility();
 
     window.scrollTo({top: 0, behavior: 'smooth'});
@@ -863,20 +823,12 @@ document.querySelectorAll('.filter-chip').forEach(chip => {
         document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
         currentFilter = chip.dataset.filter;
-        // Если не на вкладке "Все БАДы", переключаемся на неё
         if (currentSection !== 'all') {
             showSection('all');
         } else {
-            renderAll(currentFilter, document.getElementById('searchInput').value);
+            renderAll(currentFilter);
         }
     });
-});
-
-document.getElementById('searchInput').addEventListener('input', (e) => {
-    if (currentSection !== 'all') {
-        showSection('all');
-    }
-    renderAll(currentFilter, e.target.value);
 });
 
 // ================= INIT =================
